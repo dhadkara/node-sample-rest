@@ -1,22 +1,15 @@
 {
-	"env": {
-		"es6": true,
-		"node": true,
-		"mocha": true
-	},
-	"extends": "google",
-	"parserOptions": {
-		"ecmaVersion": 2018,
-		"sourceType": "module"
-	},
-	"plugins": [ "json" ],
-	"rules": {
-		"indent": [ "error", 4, { "SwitchCase": 1 } ],
-		"space-in-parens": [ "warn", "never" ],
-		"max-len": [ "warn", 160 ],
-		"no-var": "off",
-		"no-console": "warn",
-		"no-invalid-this": "warn",
-		"comma-dangle": [ "error", "never" ]
-	}
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2020": true
+    },
+    "extends": [
+        "airbnb-base"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 11
+    },
+    "rules": {
+    }
 }

@@ -7,7 +7,7 @@ phases:
   build:
     commands:
       # Discover and run linting in the 'src' directory
-      - ./node_modules/eslint/bin/eslint.js src
+      - npm run lint
 
 artifacts:
   files:
