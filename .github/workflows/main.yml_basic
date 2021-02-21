@@ -53,9 +53,6 @@ jobs:
       - name: SAM Build
         run: |
           sam build
-      - name: Run lint 
-        run: |
-          npm run lint
       - name: Run unit tests
         run: |
           npm run test
