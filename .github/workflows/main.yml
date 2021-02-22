@@ -49,7 +49,7 @@ jobs:
           echo "The branch is $BRANCH"
       - name: Install Dependencies
         run: |
-          npm install
+          npm ci
       - name: SAM Build
         run: |
           sam build
@@ -63,11 +63,15 @@ jobs:
         run: |
           # Create S3 Bucket to store code
           aws s3 mb s3://${{ steps.vars.outputs.environment }}
-          # Run SAM Deploy
-          sam deploy --template-file .aws-sam/build/template.yaml \
+          # Run SAM Package
+          sam publish --template-file .aws-sam/build/template.yaml \
             --stack-name ${{ steps.vars.outputs.environment }} \
-            --s3-bucket ${{ steps.vars.outputs.environment }} \
-            --parameter-overrides \
-              'ParameterKey=Name,ParameterValue=example \
-              ParameterKey=Version,ParameterValue=${{ steps.vars.outputs.version }}' \
-            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
+            --semantic-version 1.0.0 
+          # Run SAM Deploy
+          # sam deploy --template-file .aws-sam/build/template.yaml \
+          #   --stack-name ${{ steps.vars.outputs.environment }} \
+          #   --s3-bucket ${{ steps.vars.outputs.environment }} \
+          #   --parameter-overrides \
+          #     'ParameterKey=Name,ParameterValue=example \
+          #     ParameterKey=Version,ParameterValue=${{ steps.vars.outputs.version }}' \
+          #   --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
