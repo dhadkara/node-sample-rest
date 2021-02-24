@@ -62,7 +62,7 @@ jobs:
       - name: SAM Package
         run: |
           # Create S3 Bucket to store code
-          aws s3 mb s3://${{ steps.vars.outputs.environment }}
+          # aws s3 mb s3://${{ steps.vars.outputs.environment }}
           # Run SAM Package
           sam package \
             --template-file template.yaml \
