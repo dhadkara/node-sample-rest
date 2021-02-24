@@ -12,7 +12,7 @@ Metadata:
     Description: node-sample-rest
     Author: dhadkara
     SpdxLicenseId: Apache-2.0
-    LicenseUrl: LICENSE.txt
+    # LicenseUrl: LICENSE.txt
     ReadmeUrl: README.md
     Labels: ['tests']
     HomePageUrl: https://github.com/dhadkara/node-sample-rest
