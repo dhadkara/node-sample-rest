@@ -59,30 +59,30 @@ jobs:
       - name: Run unit tests
         run: |
           npm run test
-      - name: SAM Package
-        run: |
-          # Create S3 Bucket to store code
-          # aws s3 mb s3://${{ steps.vars.outputs.environment }}
-          # Run SAM Package
-          sam package \
-            --template-file template.yaml \
-            --output-template-file packaged.yaml \
-            --s3-bucket ${{ steps.vars.outputs.environment }} 
-      - name: SAM Publish
-        run: |
-          # Run SAM Publish
-          sam publish \
-            --template packaged.yaml \
-            --region ${{ secrets.AWS_REGION }}
-      # - name: SAM Deploy
+      # - name: SAM Package
       #   run: |
       #     # Create S3 Bucket to store code
-      #     aws s3 mb s3://${{ steps.vars.outputs.environment }}
-      #     # Run SAM Deploy
-      #     sam deploy --template-file .aws-sam/build/template.yaml \
-      #       --stack-name ${{ steps.vars.outputs.environment }} \
-      #       --s3-bucket ${{ steps.vars.outputs.environment }} \
-      #       --parameter-overrides \
-      #         'ParameterKey=Name,ParameterValue=example \
-      #         ParameterKey=Version,ParameterValue=${{ steps.vars.outputs.version }}' \
-      #       --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
+      #     # aws s3 mb s3://${{ steps.vars.outputs.environment }}
+      #     # Run SAM Package
+      #     sam package \
+      #       --template-file template.yaml \
+      #       --output-template-file packaged.yaml \
+      #       --s3-bucket ${{ steps.vars.outputs.environment }} 
+      # - name: SAM Publish
+      #   run: |
+      #     # Run SAM Publish
+      #     sam publish \
+      #       --template packaged.yaml \
+      #       --region ${{ secrets.AWS_REGION }}
+      - name: SAM Deploy
+        run: |
+          # Create S3 Bucket to store code
+          aws s3 mb s3://${{ steps.vars.outputs.environment }}
+          # Run SAM Deploy
+          sam deploy --template-file .aws-sam/build/template.yaml \
+            --stack-name ${{ steps.vars.outputs.environment }} \
+            --s3-bucket ${{ steps.vars.outputs.environment }} \
+            --parameter-overrides \
+              'ParameterKey=Name,ParameterValue=example \
+              ParameterKey=Version,ParameterValue=${{ steps.vars.outputs.version }}' \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
