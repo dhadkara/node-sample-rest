@@ -13,7 +13,7 @@ Metadata:
     Author: dhadkara
     SpdxLicenseId: Apache-2.0
     # LicenseUrl: LICENSE.txt
-    ReadmeUrl: README.md
+    # ReadmeUrl: README.md
     Labels: ['tests']
     HomePageUrl: https://github.com/dhadkara/node-sample-rest
     SemanticVersion: 1.0.0
