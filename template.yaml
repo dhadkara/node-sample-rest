@@ -4,20 +4,20 @@
 # The AWSTemplateFormatVersion identifies the capabilities of the template
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
 AWSTemplateFormatVersion: 2010-09-09
-# Description: >-
-#   node-sample-rest
+Description: >-
+  node-sample-rest
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: node-sample-rest
-    Description: node-sample-rest
-    Author: dhadkara
-    SpdxLicenseId: Apache-2.0
+    # Name: node-sample-rest
+    # Description: node-sample-rest
+    # Author: dhadkara
+    # SpdxLicenseId: Apache-2.0
     # LicenseUrl: LICENSE.txt
     # ReadmeUrl: README.md
-    Labels: ['tests']
-    HomePageUrl: https://github.com/dhadkara/node-sample-rest
+    # Labels: ['tests']
+    # HomePageUrl: https://github.com/dhadkara/node-sample-rest
     SemanticVersion: 1.0.0
-    SourceCodeUrl: https://github.com/dhadkara/node-sample-rest
+    # SourceCodeUrl: https://github.com/dhadkara/node-sample-rest
 
 # Transform section specifies one or more macros that AWS CloudFormation uses to process your template
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
