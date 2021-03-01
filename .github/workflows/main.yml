@@ -67,7 +67,7 @@ jobs:
           sam package \
             --template-file template.yaml \
             --output-template-file packaged.yaml \
-            --s3-bucket dhadkar-sam-ver-artifact
+            --s3-bucket ${{ steps.vars.outputs.environment }}
       # - name: SAM Publish
       #   run: |
       #     # Run SAM Publish
