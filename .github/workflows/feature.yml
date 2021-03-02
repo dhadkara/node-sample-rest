@@ -74,7 +74,8 @@ jobs:
           name: package
           path: packaged.yaml
  
-  sam-validate-build-test-deploy:
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
     outputs:
       env-name: ${{ steps.env-name.outputs.environment }}
