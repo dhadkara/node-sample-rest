@@ -65,7 +65,6 @@ jobs:
           aws s3 mb s3://${{ steps.vars.outputs.environment }}
           # Run SAM Package
           sam package \
-            --template-file template.yaml \
             --output-template-file packaged.yaml \
             --s3-bucket ${{ steps.vars.outputs.environment }}
       - name: Upload build artifact
