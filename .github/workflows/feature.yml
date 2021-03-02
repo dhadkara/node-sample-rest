@@ -4,10 +4,10 @@ on:
     branches: [ feature* ]
 
 jobs:
-  sam-validate-build-test-deploy:
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      env-name: ${{ steps.env-name.outputs.environment }}
+    # outputs:
+    #   env-name: ${{ steps.env-name.outputs.environment }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup node 12
@@ -59,30 +59,41 @@ jobs:
       - name: Run unit tests
         run: |
           npm run test
-      # - name: SAM Package
-      #   run: |
-      #     # Create S3 Bucket to store code
-      #     # aws s3 mb s3://${{ steps.vars.outputs.environment }}
-      #     # Run SAM Package
-      #     sam package \
-      #       --template-file template.yaml \
-      #       --output-template-file packaged.yaml \
-      #       --s3-bucket ${{ steps.vars.outputs.environment }}
-      # - name: SAM Publish
-      #   run: |
-      #     # Run SAM Publish
-      #     sam publish \
-      #       --template packaged.yaml \
-      #       --region ${{ secrets.AWS_REGION }}
-      # - name: SAM Deploy
-      #   run: |
-      #     # Create S3 Bucket to store code
-      #     aws s3 mb s3://${{ steps.vars.outputs.environment }}
-      #     # Run SAM Deploy
-      #     sam deploy --template-file .aws-sam/build/template.yaml \
-      #       --stack-name ${{ steps.vars.outputs.environment }} \
-      #       --s3-bucket ${{ steps.vars.outputs.environment }} \
-      #       --parameter-overrides \
-      #         'ParameterKey=Name,ParameterValue=example \
-      #         ParameterKey=Version,ParameterValue=${{ steps.vars.outputs.version }}' \
-      #       --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
+      - name: SAM Package
+        run: |
+          # Create S3 Bucket to store code
+          aws s3 mb s3://${{ steps.vars.outputs.environment }}
+          # Run SAM Package
+          sam package \
+            --template-file template.yaml \
+            --output-template-file packaged.yaml \
+            --s3-bucket ${{ steps.vars.outputs.environment }}
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: packaged.yaml
+ 
+  sam-validate-build-test-deploy:
+    runs-on: ubuntu-latest
+    outputs:
+      env-name: ${{ steps.env-name.outputs.environment }}
+    steps:
+      - name: Upload build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: package
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: SAM Deploy
+        run: |
+          # Run SAM Deploy
+          sam deploy --template-file packaged.yaml \
+            --stack-name ${{ steps.vars.outputs.environment }} \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM

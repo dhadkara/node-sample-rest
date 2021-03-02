@@ -8,15 +8,15 @@ Description: >-
   node-sample-rest
 Metadata:
   AWS::ServerlessRepo::Application:
-    # Name: node-sample-rest
-    # Description: node-sample-rest
-    # Author: dhadkara
+    Name: node-sample-rest
+    Description: node-sample-rest
+    Author: dhadkara
     # SpdxLicenseId: Apache-2.0
     # LicenseUrl: LICENSE.txt
     # ReadmeUrl: README.md
     # Labels: ['tests']
     # HomePageUrl: https://github.com/dhadkara/node-sample-rest
-    SemanticVersion: 1.0.0
+    SemanticVersion: 1.0.1
     # SourceCodeUrl: https://github.com/dhadkara/node-sample-rest
 
 # Transform section specifies one or more macros that AWS CloudFormation uses to process your template
@@ -34,6 +34,7 @@ Resources:
   getAllItemsFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: .
       Handler: src/handlers/get-all-items.getAllItemsHandler
       Runtime: nodejs12.x
       MemorySize: 128
@@ -60,6 +61,7 @@ Resources:
   getByIdFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: .
       Handler: src/handlers/get-by-id.getByIdHandler
       Runtime: nodejs12.x
       MemorySize: 128
@@ -86,6 +88,7 @@ Resources:
   putItemFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: .
       Handler: src/handlers/put-item.putItemHandler
       Runtime: nodejs12.x
       MemorySize: 128
