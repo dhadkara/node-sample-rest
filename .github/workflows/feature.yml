@@ -1,4 +1,4 @@
-name: SAM Validate, Build, Test, Deploy
+name: Feature Pipeline
 on:
   push:
     branches: [ feature* ]
@@ -113,9 +113,18 @@ jobs:
           echo "The repository is $REPOSITORY"
           echo "The environment is $ENVIRONMENT"
           echo "The branch is $BRANCH"
-      - name: SAM Deploy
+      - name: Feature Deploy
         run: |
           # Run SAM Deploy
           sam deploy --template-file packaged.yaml \
             --stack-name ${{ steps.vars.outputs.environment }} \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
+      - name: Run integration tests
+        run: |
+          echo "Running Integration Tests"
+      - name: Feature Teardown
+        run: |
+          # Run CFN Delete Stack
+          aws cloudformation delete-stack \
+            --stack-name ${{ steps.vars.outputs.environment }}
+            
