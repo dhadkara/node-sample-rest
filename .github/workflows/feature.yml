@@ -1,7 +1,10 @@
 name: Feature Pipeline
 on:
   push:
-    branches
+    branches: 
+      - feature*
+  pull_request:
+    branches:
       - main
 
 jobs:

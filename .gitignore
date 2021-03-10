@@ -120,3 +120,4 @@ Archive.zip
 *.DS_Store
 .DS_Store
 .aws-sam
+packaged.yaml
