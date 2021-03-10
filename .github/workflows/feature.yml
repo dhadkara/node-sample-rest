@@ -1,11 +1,11 @@
 name: Feature Pipeline
 on:
   push:
-    branches-ignore
+    branches: 
+      - feature*
+  pull_request:
+    branches:
       - main
-  # pull_request:
-  #   branches:
-  #     - main
 
 jobs:
   build:
@@ -132,15 +132,15 @@ jobs:
           aws cloudformation delete-stack \
             --stack-name ${{ steps.vars.outputs.environment }}
   
-  # release:
-  #   needs: deploy
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Bump version and push tag
-  #       id: tag_version
-  #       uses: mathieudutour/github-tag-action@v5.2
-  #       with:
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  release:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v5.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       # - name: Create Release
       #   id: create_release
       #   uses: actions/create-release@v1
