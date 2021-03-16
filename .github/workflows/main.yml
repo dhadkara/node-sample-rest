@@ -1,4 +1,4 @@
-name: Commit Pipeline
+name: Artifact Pipeline
 on:
   push:
     branches:
