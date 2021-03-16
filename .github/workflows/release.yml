@@ -1,6 +1,6 @@
 name: Release Pipeline
 on:
-  push:
+  create:
     tags:
       - '*'
   release:
