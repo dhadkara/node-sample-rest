@@ -1,11 +1,9 @@
 name: Release Pipeline
 on:
-  push:
-    tags:
-      - '*'
-  # release:
-  #   types: 
-  #     - published
+  release:
+    types:
+      - created
+      - published
 
 jobs:
   build:
