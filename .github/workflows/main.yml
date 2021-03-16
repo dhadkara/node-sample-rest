@@ -1,4 +1,4 @@
-name: Feature Pipeline
+name: Release Artifact Pipeline
 on:
   push:
     branches:

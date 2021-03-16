@@ -1,30 +1,54 @@
 name: Release Deployment Pipeline
 on:
-  create:
+  release:
+    types: 
+      - created
     # Sequence of patterns matched against refs/tags
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
-name: Create Release
+    # tags:
+    #   - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
-    name: Create Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
+      - uses: actions/checkout@v2
+      - name: Configure variables
+        shell: bash
+        id: check
+        run: |
+          # Set variables
+          ls -ltr
+      # - name: Setup node 12
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: 12.x
+      # - name: Configure AWS credentials
+      #   id: creds
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     # aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+      # - name: Configure variables
+      #   shell: bash
+      #   id: vars
+      #   env:
+      #     REPO: ${{ github.repository }}
+      #     HASH: ${{ github.sha }}
+      #     REF: ${{ github.ref }}
+      #   run: |
+      #     # Set variables
+      #     BRANCH=${REF#refs/heads/}
+      #     REPOSITORY=`echo $REPO | tr "/" "-"`
+      #     ENVIRONMENT=$BRANCH-$REPOSITORY-${{ secrets.AWS_REGION }}
+      #     # In this step we are setting variables and persistenting them
+      #     # into the environment so that they can be utilized in other steps
+      #     echo "::set-output name=branch::$BRANCH"
+      #     echo "::set-output name=repository::$REPOSITORY"
+      #     echo "::set-output name=environment::$ENVIRONMENT"
+      #     # Output variables to ensure their values are set correctly when ran
+      #     echo "The region is ${{ secrets.AWS_REGION }}"
+      #     echo "The repository is $REPOSITORY"
+      #     echo "The environment is $ENVIRONMENT"
+      #     echo "The branch is $BRANCH"
