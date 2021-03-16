@@ -138,7 +138,7 @@ jobs:
         with:
           name: package
       - name: Archive site content
-        uses: uses: thedoctor0/zip-release@master
+        uses: thedoctor0/zip-release@master
         with:
           filename: release.zip
       - name: Create Release
