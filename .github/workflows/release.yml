@@ -1,4 +1,4 @@
-name: Release Deployment Pipeline
+name: Deployment Pipeline
 on:
   release:
     types: 
@@ -11,7 +11,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Download asset
+        uses: fabriciobastian/download-release-asset-action@v1.0.6
+        with:
+          version: latest
+          repository: dhadkara/node-sample-rest
+          file: release-${{ github.event.release.tag_name }}.zip
+          out: ./
       - name: Configure variables
         shell: bash
         id: check
