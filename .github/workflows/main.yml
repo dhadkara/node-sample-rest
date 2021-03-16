@@ -11,6 +11,10 @@ jobs:
     #   env-name: ${{ steps.env-name.outputs.environment }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          token: ${{ secrets.REPO_PAT }}
       - name: Setup node 12
         uses: actions/setup-node@v2
         with:
