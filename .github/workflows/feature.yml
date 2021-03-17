@@ -76,7 +76,7 @@ jobs:
           path: packaged.yaml
  
   deploy-feature:
-    needs: build
+    needs: build-feature
     runs-on: ubuntu-latest
     outputs:
       env-name: ${{ steps.env-name.outputs.environment }}
