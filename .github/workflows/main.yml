@@ -1,4 +1,4 @@
-name: Artifact Pipeline
+name: CI Pipeline
 on:
   push:
     branches:

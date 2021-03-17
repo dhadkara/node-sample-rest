@@ -1,15 +1,11 @@
-name: Release Pipeline
+name: CD Pipeline
 on:
-  # push:
-  #   tags:
-  #     - 'v*'
   release:
     types:
-      # - created
       - published
 
 jobs:
-  build:
+  deploy-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Download asset
@@ -25,16 +21,6 @@ jobs:
         uses: TonyBogdanov/zip@1.0
         with:
             args: unzip -qq ./release*.zip -d ./
-      - name: Configure variables
-        shell: bash
-        id: check
-        run: |
-          # Set variables
-          ls -ltr
-      # - name: Setup node 12
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: 12.x
       - name: Configure AWS credentials
         id: creds
         uses: aws-actions/configure-aws-credentials@v1
