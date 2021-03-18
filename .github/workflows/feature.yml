@@ -119,7 +119,7 @@ jobs:
       - name: Feature Deploy
         run: |
           # Run SAM Deploy
-          sam deploy --template-file packaged.yaml \
+          sam deploy --template-file template.yaml \
             --stack-name ${{ steps.vars.outputs.environment }} \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
       - name: Run integration tests
