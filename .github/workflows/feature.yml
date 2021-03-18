@@ -61,30 +61,30 @@ jobs:
       - name: Run unit tests
         run: |
           npm run test
-      - name: SAM Package
-        run: |
-          # Create S3 Bucket to store code
-          aws s3 mb s3://${{ steps.vars.outputs.environment }}
-          # Run SAM Package
-          sam package \
-            --output-template-file packaged.yaml \
-            --s3-bucket ${{ steps.vars.outputs.environment }}
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: package
-          path: packaged.yaml
+      # - name: SAM Package
+      #   run: |
+      #     # Create S3 Bucket to store code
+      #     aws s3 mb s3://${{ steps.vars.outputs.environment }}
+      #     # Run SAM Package
+      #     sam package \
+      #       --output-template-file packaged.yaml \
+      #       --s3-bucket ${{ steps.vars.outputs.environment }}
+      # - name: Upload build artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: package
+      #     path: packaged.yaml
  
-  deploy-feature:
-    needs: build-feature
-    runs-on: ubuntu-latest
-    outputs:
-      env-name: ${{ steps.env-name.outputs.environment }}
-    steps:
-      - name: Upload build artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: package
+  # deploy-feature:
+  #   needs: build-feature
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     env-name: ${{ steps.env-name.outputs.environment }}
+  #   steps:
+  #     - name: Upload build artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: package
       - name: Configure AWS credentials
         id: creds
         uses: aws-actions/configure-aws-credentials@v1
@@ -102,7 +102,8 @@ jobs:
           REF: ${{ github.ref }}
         run: |
           # Set variables
-          BRANCH=${REF#refs/heads/}
+          # BRANCH=${REF#refs/heads/}
+          BRANCH=feature
           REPOSITORY=`echo $REPO | tr "/" "-"`
           ENVIRONMENT=$BRANCH-$REPOSITORY-${{ secrets.AWS_REGION }}
           # In this step we are setting variables and persistenting them
