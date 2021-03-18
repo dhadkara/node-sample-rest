@@ -41,7 +41,7 @@ jobs:
           # Set variables
           BRANCH=${REF#refs/heads/}
           REPOSITORY=`echo $REPO | tr "/" "-"`
-          ENVIRONMENT=$BRANCH-$REPOSITORY-${{ secrets.AWS_REGION }}-1234
+          ENVIRONMENT=$BRANCH-$REPOSITORY-${{ secrets.AWS_REGION }}
           # In this step we are setting variables and persistenting them
           # into the environment so that they can be utilized in other steps
           echo "::set-output name=branch::$BRANCH"
@@ -78,7 +78,7 @@ jobs:
           name: package
           path: packaged.yaml
  
-  deploy:
+  deploy-dev:
     needs: build
     runs-on: ubuntu-latest
     outputs:
@@ -118,23 +118,23 @@ jobs:
           echo "The repository is $REPOSITORY"
           echo "The environment is $ENVIRONMENT"
           echo "The branch is $BRANCH"
-      # - name: Feature Deploy
-      #   run: |
-      #     # Run SAM Deploy
-      #     sam deploy --template-file packaged.yaml \
-      #       --stack-name ${{ steps.vars.outputs.environment }} \
-      #       --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
-      # - name: Run integration tests
-      #   run: |
-      #     echo "Running Integration Tests"
-      # - name: Feature Teardown
-      #   run: |
-      #     # Run CFN Delete Stack
-      #     aws cloudformation delete-stack \
-      #       --stack-name ${{ steps.vars.outputs.environment }}
+      - name: Deploy
+        run: |
+          # Run SAM Deploy
+          sam deploy --template-file packaged.yaml \
+            --stack-name ${{ steps.vars.outputs.environment }} \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
+      - name: Run integration tests
+        run: |
+          echo "Running Integration Tests"
+      - name: Teardown
+        run: |
+          # Run CFN Delete Stack
+          aws cloudformation delete-stack \
+            --stack-name ${{ steps.vars.outputs.environment }}
   
-  release:
-    needs: deploy
+  create-artifact:
+    needs: deploy-dev
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifact
@@ -163,23 +163,3 @@ jobs:
           asset_path: ./release.zip
           asset_name: release-v1.0.${{ github.run_number }}.zip
           asset_content_type: application/zip
-
-      # - name: Bump version and push tag
-      #   id: tag_version
-      #   uses: mathieudutour/github-tag-action@v5.2
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      #   with:
-      #     tag_name: ${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
-      #     body: |
-      #       Changes in this Release
-      #       - First Change
-      #       - Second Change
-      #     draft: false
-      #     prerelease: false

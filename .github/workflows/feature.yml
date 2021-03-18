@@ -5,13 +5,11 @@ on:
       - feature*
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
-  build:
+  build-feature:
     runs-on: ubuntu-latest
-    # outputs:
-    #   env-name: ${{ steps.env-name.outputs.environment }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup node 12
@@ -38,7 +36,8 @@ jobs:
           REF: ${{ github.ref }}
         run: |
           # Set variables
-          BRANCH=${REF#refs/heads/}
+          # BRANCH=${REF#refs/heads/}
+          BRANCH=feature
           REPOSITORY=`echo $REPO | tr "/" "-"`
           ENVIRONMENT=$BRANCH-$REPOSITORY-${{ secrets.AWS_REGION }}-1234
           # In this step we are setting variables and persistenting them
@@ -71,52 +70,53 @@ jobs:
           sam package \
             --output-template-file packaged.yaml \
             --s3-bucket ${{ steps.vars.outputs.environment }}
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: package
-          path: packaged.yaml
+      # - name: Upload build artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: package
+      #     path: packaged.yaml
  
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    outputs:
-      env-name: ${{ steps.env-name.outputs.environment }}
-    steps:
-      - name: Upload build artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: package
-      - name: Configure AWS credentials
-        id: creds
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - name: Configure variables
-        shell: bash
-        id: vars
-        env:
-          REPO: ${{ github.repository }}
-          HASH: ${{ github.sha }}
-          REF: ${{ github.ref }}
-        run: |
-          # Set variables
-          BRANCH=${REF#refs/heads/}
-          REPOSITORY=`echo $REPO | tr "/" "-"`
-          ENVIRONMENT=$BRANCH-$REPOSITORY-${{ secrets.AWS_REGION }}
-          # In this step we are setting variables and persistenting them
-          # into the environment so that they can be utilized in other steps
-          echo "::set-output name=branch::$BRANCH"
-          echo "::set-output name=repository::$REPOSITORY"
-          echo "::set-output name=environment::$ENVIRONMENT"
-          # Output variables to ensure their values are set correctly when ran
-          echo "The region is ${{ secrets.AWS_REGION }}"
-          echo "The repository is $REPOSITORY"
-          echo "The environment is $ENVIRONMENT"
-          echo "The branch is $BRANCH"
+  # deploy-feature:
+  #   needs: build-feature
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     env-name: ${{ steps.env-name.outputs.environment }}
+  #   steps:
+  #     - name: Upload build artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: package
+      # - name: Configure AWS credentials
+      #   id: creds
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     # aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+      # - name: Configure variables
+      #   shell: bash
+      #   id: vars
+      #   env:
+      #     REPO: ${{ github.repository }}
+      #     HASH: ${{ github.sha }}
+      #     REF: ${{ github.ref }}
+      #   run: |
+      #     # Set variables
+      #     # BRANCH=${REF#refs/heads/}
+      #     BRANCH=feature
+      #     REPOSITORY=`echo $REPO | tr "/" "-"`
+      #     ENVIRONMENT=$BRANCH-$REPOSITORY-${{ secrets.AWS_REGION }}
+      #     # In this step we are setting variables and persistenting them
+      #     # into the environment so that they can be utilized in other steps
+      #     echo "::set-output name=branch::$BRANCH"
+      #     echo "::set-output name=repository::$REPOSITORY"
+      #     echo "::set-output name=environment::$ENVIRONMENT"
+      #     # Output variables to ensure their values are set correctly when ran
+      #     echo "The region is ${{ secrets.AWS_REGION }}"
+      #     echo "The repository is $REPOSITORY"
+      #     echo "The environment is $ENVIRONMENT"
+      #     echo "The branch is $BRANCH"
       - name: Feature Deploy
         run: |
           # Run SAM Deploy
@@ -132,26 +132,3 @@ jobs:
           aws cloudformation delete-stack \
             --stack-name ${{ steps.vars.outputs.environment }}
   
-  release:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v5.2
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      #   with:
-      #     tag_name: ${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
-      #     body: |
-      #       Changes in this Release
-      #       - First Change
-      #       - Second Change
-      #     draft: false
-      #     prerelease: false
