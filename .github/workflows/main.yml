@@ -7,8 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # outputs:
-    #   env-name: ${{ steps.env-name.outputs.environment }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -78,7 +76,7 @@ jobs:
           name: package
           path: packaged.yaml
  
-  deploy-dev:
+  deploy:
     needs: build
     runs-on: ubuntu-latest
     outputs:
@@ -134,7 +132,7 @@ jobs:
             --stack-name ${{ steps.vars.outputs.environment }}
   
   create-artifact:
-    needs: deploy-dev
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifact
