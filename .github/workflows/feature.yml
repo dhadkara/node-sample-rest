@@ -39,7 +39,7 @@ jobs:
           # BRANCH=${REF#refs/heads/}
           BRANCH=feature
           REPOSITORY=`echo $REPO | tr "/" "-"`
-          ENVIRONMENT=$BRANCH-$REPOSITORY-${{ secrets.AWS_REGION }}-1234
+          ENVIRONMENT=$BRANCH-$REPOSITORY-${{ secrets.AWS_REGION }}-12345
           # In this step we are setting variables and persistenting them
           # into the environment so that they can be utilized in other steps
           echo "::set-output name=branch::$BRANCH"
@@ -65,11 +65,11 @@ jobs:
       - name: SAM Package
         run: |
           # Create S3 Bucket to store code
-          aws s3 mb s3://${{ steps.vars.outputs.environment }}-dhadkar
+          aws s3 mb s3://${{ steps.vars.outputs.environment }}
           # Run SAM Package
           sam package \
             --output-template-file packaged.yaml \
-            --s3-bucket ${{ steps.vars.outputs.environment }}dhadkar
+            --s3-bucket ${{ steps.vars.outputs.environment }}
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
