@@ -65,11 +65,11 @@ jobs:
       - name: SAM Package
         run: |
           # Create S3 Bucket to store code
-          aws s3 mb s3://${{ steps.vars.outputs.environment }}
+          aws s3 mb s3://${{ steps.vars.outputs.environment }}-dhadkar
           # Run SAM Package
           sam package \
             --output-template-file packaged.yaml \
-            --s3-bucket ${{ steps.vars.outputs.environment }}
+            --s3-bucket ${{ steps.vars.outputs.environment }}dhadkar
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
